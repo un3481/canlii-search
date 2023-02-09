@@ -2,6 +2,7 @@
 ##########################################################################################################################
 
 # Imports
+from json import loads
 from requests import get
 from typing import TypedDict
 from PyPDF2 import PdfFileReader
@@ -57,7 +58,7 @@ def find(full_name: str, provinces: list[str], court: bool, tribunal: bool):
                 fetched_pages = True
                 
                 # Check pages list
-                res_pages: list[dict] = res_json['pages']
+                res_pages: list[dict] = loads(res_json['pages'])
                 
                 # Extract pages
                 for res_page in res_pages:
