@@ -20,21 +20,18 @@ async def search():
     # try:
         args = request.args
         full_name = args.get('fullname', default=None, type=str)
-        provinces = args.get('provinces', default=None, type=list)
-        tribunal = args.get('tribunal', default="yes", type=str)
-        court = args.get('court', default="yes", type=str)
+        provinces = args.get('provinces', default=None, type=str)
+        tribunal = args.get('tribunal', default='yes', type=str)
+        court = args.get('court', default='yes', type=str)
         
         if full_name == None:
             return Response('', status=400)
         
-        if provinces == None: provinces = []
-        if len(provinces) > 0:
-            for province in provinces:
-                if not isinstance(province, str):
-                    return Response('', status=400)
+        if provinces == None: provinces = 'ca'
+        provinces = provinces.split(',')
         
         # Run Search
-        search_ok, cases = find(full_name, provinces, court=="yes", tribunal=="yes")
+        search_ok, cases = find(full_name, provinces, court=='yes', tribunal=='yes')
         if not search_ok: raise cases
         
         # Run OpenAI Summarizer
