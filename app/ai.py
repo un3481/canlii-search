@@ -24,7 +24,7 @@ def summarize_text(text: str):
             model="text-davinci-003",
             prompt=question,
             temperature=0.5,
-            max_tokens=1000,
+            max_tokens=1000
         )["choices"][0]["text"]
         
         # Check answer
