@@ -80,18 +80,24 @@ def summarize(cases: list[Case]):
         # Download PDF text
         pdf_ok, text = download_text(case['url'])
         if not pdf_ok:
+            print(f'download error: {text}')
             summarized_queue.put(case)
             continue
+        
+        print(f'downloaded text with len: {len(text)}')
         
         # Spawn Thread
         thread = Thread(target=summarize_iter, args=(case, text, summarized_queue))
         thread.daemon = True
         thread.start()
         threads.append(thread)
+        
+        print(f'started openai thread')
     
     # Join all threads
     for thread in threads:
         thread.join()
+        print(f'finished openai thread')
     
     # Extract data from Queue
     summarized: list[Case] = []
