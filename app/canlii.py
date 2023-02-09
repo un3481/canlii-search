@@ -2,11 +2,11 @@
 ##########################################################################################################################
 
 # Imports
+from io import BytesIO
 from json import loads
 from requests import get
-from io import BytesIO
-from typing import TypedDict
 from PyPDF2 import PdfReader
+from typing import TypedDict
 
 ##########################################################################################################################
 
@@ -115,6 +115,7 @@ def download_text(url: str):
         for page in _pdf.pages:
             text += page.extract_text()
             text += '\n\n'
+            if len(text) > 10000: break
         
         # Return data
         return True, text

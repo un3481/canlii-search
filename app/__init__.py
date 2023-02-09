@@ -16,8 +16,8 @@ app = Flask('canlii_search_app')
 
 # Search route
 @app.route('/search/', methods=['GET'])
-async def search():
-    # try:
+def search():
+    try:
         args = request.args
         full_name = args.get('fullname', default=None, type=str)
         provinces = args.get('provinces', default=None, type=str)
@@ -35,14 +35,14 @@ async def search():
         if not search_ok: raise cases
         
         # Run OpenAI Summarizer
-        summarized = await summarize(cases)
+        summarized = summarize(cases)
         
         # Return Data
         return Response(
             dumps(summarized),
             mimetype = 'application/json'
         )
-    # except Exception as error:
-    #     return Response('', status=501)
+    except Exception as error:
+        return Response('', status=501)
 
 ##########################################################################################################################
