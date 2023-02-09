@@ -60,6 +60,7 @@ async def summarize(cases: list[Case]):
     for case in cases:
         # Download PDF text
         pdf_ok, text = download_text(case["url"])
+        if not pdf_ok: raise text
         params.append((case, text if pdf_ok else None))
     
     # Spawn threads
