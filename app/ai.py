@@ -38,12 +38,10 @@ def summarize_text(text: str):
 
 ##########################################################################################################################
 
-async def summarize_iter(params: tuple[Case, str]):
-    # Extract params
-    case, text = params
-    
-    # Check case text
-    if text == None: return case
+async def summarize_iter(case: Case):
+    # Download PDF text
+    pdf_ok, text = download_text(case["url"])
+    if not pdf_ok: return case
     
     # Summarize
     summary_ok, summary = summarize_text(text)
@@ -55,16 +53,8 @@ async def summarize_iter(params: tuple[Case, str]):
 ##########################################################################################################################
 
 async def summarize(cases: list[Case]):
-    # Compose params
-    params: list[tuple[Case, str]] = []
-    for case in cases:
-        # Download PDF text
-        pdf_ok, text = download_text(case["url"])
-        if not pdf_ok: raise text
-        params.append((case, text if pdf_ok else None))
-    
     # Spawn threads
-    threads = list(map(summarize_iter, params))
+    threads = list(map(summarize_iter, cases))
     
     # Await all threads
     summarized_cases: list[Case] = []

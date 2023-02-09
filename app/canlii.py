@@ -4,8 +4,9 @@
 # Imports
 from json import loads
 from requests import get
+from io import BytesIO
 from typing import TypedDict
-from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfReader
 
 ##########################################################################################################################
 
@@ -106,9 +107,10 @@ def download_text(url: str):
             raise Exception('Invalid MIME type')
 
         # Extract text from PDF
-        _pdf = PdfFileReader(res.content)
-        _page = _pdf.getPage(_pdf.numPages + 1)
-        text = _page.extractText()
+        _bytes = BytesIO(res.content)
+        _pdf = PdfReader(_bytes)
+        _page = _pdf.pages[len(_pdf.pages) - 1]
+        text = _page.extract_text()
         
         # Return data
         return True, text
