@@ -5,7 +5,10 @@
 import os
 import openai
 
+# Modules
 from .canlii import Case, download_text
+
+##########################################################################################################################
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
