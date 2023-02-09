@@ -94,12 +94,11 @@ def find(full_name: str, provinces: list[str], court: bool, tribunal: bool):
 def download_text(url: str):
     try:
         pdf_url = url.replace('.html', '.pdf')
-        raise Exception(pdf_url)
         res = get(pdf_url)
 
         # Check status
         if res.status_code != 200:
-            raise Exception('Could not download file')
+            raise Exception(f'Could not download file ({res.status_code}, {res.headers.get("content-type", default="")})')
 
         # Check mimetype
         mimetype = res.headers.get('content-type', default='').lower()
