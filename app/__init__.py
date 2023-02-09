@@ -17,7 +17,7 @@ app = Flask('canlii_search_app')
 # Search route
 @app.route('/search/', methods=['GET'])
 async def search():
-    try:
+    # try:
         args = request.args
         full_name = args.get('fullname', default=None, type=str)
         provinces = args.get('provinces', default=None, type=list)
@@ -45,8 +45,7 @@ async def search():
             dumps(summarized),
             mimetype = 'application/json'
         )
-    except Exception as error:
-        return Response(f'{error}')
-        return Response('', status=501)
+    # except Exception as error:
+    #     return Response('', status=501)
 
 ##########################################################################################################################
