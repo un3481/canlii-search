@@ -46,6 +46,7 @@ async def search():
             mimetype = 'application/json'
         )
     except Exception as error:
+        print(f'{error}')
         return Response('', status=501)
 
 ##########################################################################################################################
