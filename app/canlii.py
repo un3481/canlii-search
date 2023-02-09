@@ -98,7 +98,7 @@ def download_text(url: str):
 
         # Check status
         if res.status_code != 200:
-            raise Exception(f'Could not download file ({res.status_code}, {res.headers.get("content-type", default="")})')
+            raise Exception(f'Could not download file')
 
         # Check mimetype
         mimetype = res.headers.get('content-type', default='').lower()
