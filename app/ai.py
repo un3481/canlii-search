@@ -58,6 +58,7 @@ def summarize_iter(case: Case, text: str, queue: Queue):
     # Summarize
     summary_ok, summary = summarize_text(text, retry=10)
     if summary_ok: case['summary'] = summary
+    else: print(f'openai error: {summary}')
     
     # Return data
     queue.put(case)
