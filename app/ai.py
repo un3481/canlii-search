@@ -57,7 +57,10 @@ async def summarize(cases: list[Case]):
     threads = list(map(summarize_iter, cases))
     
     # Await all threads
-    summarized = list(map(lambda t: await t, threads))
+    summarized: list[Case] = []
+    for thread in threads:
+        case = await thread
+        summarized.append(case)
     
     # Return summarized cases
     return summarized
