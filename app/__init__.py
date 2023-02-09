@@ -6,8 +6,8 @@ from flask import Flask, request, Response
 from json import dumps
 
 # Modules
-from .canlii import find
-from .ai import summarize
+from .search import find
+from .summary import extract_text, summarize
 
 ##########################################################################################################################
 
@@ -34,12 +34,38 @@ def search():
         search_ok, cases = find(full_name, provinces, court=='yes', tribunal=='yes')
         if not search_ok: raise cases
         
-        # Run OpenAI Summarizer
-        summarized = summarize(cases)
+        # Return Data
+        return Response(
+            dumps(cases),
+            mimetype = 'application/json'
+        )
+    except Exception as error:
+        return Response('', status=501)
+
+##########################################################################################################################
+
+# Summary route
+@app.route('/summary/', methods=['POST'])
+def summary():
+    try:
+        files = request.files
+        file = files.get('file', default=None)
+        
+        if file == None:
+            return Response('', status=400)
+        
+        # Extract text from file
+        _bytes = file.stream.read()
+        text_ok, text = extract_text(_bytes)
+        if not text_ok: raise text
+        
+        # Run OpenAI Summarize
+        summarize_ok, answer = summarize(text, retry=10)
+        if not summarize_ok: raise answer
         
         # Return Data
         return Response(
-            dumps(summarized),
+            dumps({'answer': answer}),
             mimetype = 'application/json'
         )
     except Exception as error:

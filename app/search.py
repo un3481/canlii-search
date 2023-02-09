@@ -2,19 +2,17 @@
 ##########################################################################################################################
 
 # Imports
-from io import BytesIO
 from json import loads
 from requests import get
-from PyPDF2 import PdfReader
 from typing import TypedDict
 
 ##########################################################################################################################
 
 class Case(TypedDict):
     province: str
+    id: str
     title: str
     url: str
-    summary: str
 
 ##########################################################################################################################
 
@@ -79,46 +77,13 @@ def find(full_name: str, provinces: list[str], court: bool, tribunal: bool):
                 # Append case
                 cases.append(Case(
                     province = result['jurisdictionId'],
+                    id = result['concatId'],
                     title = result['title'],
-                    url = f'{base}{result["path"]}',
-                    summary = ''
+                    url = f'{base}{result["path"]}'
                 ))
         
         # Return data
         return True, cases
-    except Exception as error:
-        return False, error
-    
-
-##########################################################################################################################
-
-def download_text(url: str):
-    try:
-        pdf_url = url.replace('.html', '.pdf')
-        res = get(pdf_url)
-
-        # Check status
-        if res.status_code != 200:
-            raise Exception(f'Could not download file')
-
-        # Check mimetype
-        mimetype = res.headers.get('content-type', default='').lower()
-        if mimetype != 'application/pdf':
-            raise Exception('Invalid MIME type')
-
-        # Create PDF
-        _bytes = BytesIO(res.content)
-        _pdf = PdfReader(_bytes)
-        
-        # Extract text from PDF
-        text = ''
-        for page in _pdf.pages:
-            text += page.extract_text()
-            text += '\n\n'
-            if len(text) > 10000: break
-        
-        # Return data
-        return True, text
     except Exception as error:
         return False, error
 
