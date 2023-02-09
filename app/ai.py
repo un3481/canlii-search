@@ -41,7 +41,7 @@ def summarize_text(text: str):
 async def summarize_iter(case: Case):
     # Download PDF text
     pdf_ok, text = download_text(case["url"])
-    if not pdf_ok: return case
+    if not pdf_ok: raise text
     
     # Summarize
     summary_ok, summary = summarize_text(text)
