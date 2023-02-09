@@ -106,11 +106,15 @@ def download_text(url: str):
         if mimetype != 'application/pdf':
             raise Exception('Invalid MIME type')
 
-        # Extract text from PDF
+        # Create PDF
         _bytes = BytesIO(res.content)
         _pdf = PdfReader(_bytes)
-        _page = _pdf.pages[len(_pdf.pages) - 1]
-        text = _page.extract_text()
+        
+        # Extract text from PDF
+        text = ''
+        for page in _pdf.pages:
+            text += page.extract_text()
+            text += '\n\n'
         
         # Return data
         return True, text
